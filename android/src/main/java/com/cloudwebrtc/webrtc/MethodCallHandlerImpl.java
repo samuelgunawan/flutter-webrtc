@@ -113,6 +113,8 @@ public class MethodCallHandlerImpl implements MethodCallHandler, StateProvider {
 
   private Activity activity;
 
+  private final AudioInputListener audioInputListener = new AudioInputListener();
+
   MethodCallHandlerImpl(Context context, BinaryMessenger messenger, TextureRegistry textureRegistry,
       @NonNull AudioManager audioManager) {
     this.context = context;
@@ -375,6 +377,31 @@ public class MethodCallHandlerImpl implements MethodCallHandler, StateProvider {
       case "peerConnectionDispose": {
         String peerConnectionId = call.argument("peerConnectionId");
         peerConnectionDispose(peerConnectionId);
+        result.success(null);
+        break;
+      }
+      case "attachAudioInputListener": {
+        EventChannel audioInputEventChannel =
+                new EventChannel(
+                        messenger,
+                        "FlutterWebRTC/InputAudioSamples");
+        audioInputListener.setEventChannel(audioInputEventChannel);
+        audioInputListener.setInterceptor(getUserMediaImpl.inputSamplesInterceptor);
+        result.success(null);
+        break;
+      }
+      case "startAudioInputListener": {
+        audioInputListener.start();
+        result.success(null);
+        break;
+      }
+      case "pauseAudioInputListener": {
+        audioInputListener.pause();
+        result.success(null);
+        break;
+      }
+      case "disposeAudioInputListener": {
+        audioInputListener.dispose();
         result.success(null);
         break;
       }
