@@ -2,6 +2,7 @@ package com.cloudwebrtc.webrtc;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
@@ -10,9 +11,11 @@ import android.util.LongSparseArray;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.cloudwebrtc.webrtc.record.AudioChannel;
 import com.cloudwebrtc.webrtc.record.FrameCapturer;
+import com.cloudwebrtc.webrtc.services.MyMediaProjectionService;
 import com.cloudwebrtc.webrtc.utils.AnyThreadResult;
 import com.cloudwebrtc.webrtc.utils.ConstraintsArray;
 import com.cloudwebrtc.webrtc.utils.ConstraintsMap;
@@ -162,6 +165,9 @@ public class MethodCallHandlerImpl implements MethodCallHandler, StateProvider {
         .setVideoDecoderFactory(new DefaultVideoDecoderFactory(eglContext))
         .setAudioDeviceModule(audioDeviceModule)
         .createPeerConnectionFactory();
+
+    final Intent intent = new Intent(activity, MyMediaProjectionService.class);
+    ContextCompat.startForegroundService(activity, intent);
   }
 
   @Override

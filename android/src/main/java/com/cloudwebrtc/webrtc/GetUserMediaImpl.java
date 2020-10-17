@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -34,11 +36,14 @@ import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.cloudwebrtc.webrtc.record.AudioChannel;
 import com.cloudwebrtc.webrtc.record.AudioSamplesInterceptor;
 import com.cloudwebrtc.webrtc.record.MediaRecorderImpl;
 import com.cloudwebrtc.webrtc.record.OutputAudioSamplesInterceptor;
+import com.cloudwebrtc.webrtc.services.MyMediaProjectionService;
 import com.cloudwebrtc.webrtc.utils.Callback;
 import com.cloudwebrtc.webrtc.utils.ConstraintsArray;
 import com.cloudwebrtc.webrtc.utils.ConstraintsMap;
@@ -75,6 +80,8 @@ import java.util.List;
 import java.util.Map;
 
 import io.flutter.plugin.common.MethodChannel.Result;
+
+import static androidx.core.app.NotificationCompat.PRIORITY_MIN;
 
 /**
  * The implementation of {@code getUserMedia} extracted into a separate file in order to reduce
@@ -162,6 +169,12 @@ class GetUserMediaImpl {
                         "Can't run requestStart() due to a low API level. API level 21 or higher is required.");
                 return;
             } else {
+
+
+                //TODO AAA
+//                final Intent intent = new Intent(activity, MyMediaProjectionService.class);
+//                ContextCompat.startForegroundService(activity, intent);
+
                 MediaProjectionManager mediaProjectionManager =
                         (MediaProjectionManager) activity.getSystemService(Context.MEDIA_PROJECTION_SERVICE);
 
@@ -205,6 +218,21 @@ class GetUserMediaImpl {
             checkSelfPermissions(/* requestPermissions */ true);
         }
     }
+
+//    private void startForeground(Activity activity) {
+//        String channelId = "";
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationManager.createNotificationChannel("my_service", "My Background Service");
+//        }
+//
+//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(activity, channelId);
+//        Notification notification = notificationBuilder.setOngoing(true)
+////                .setSmallIcon(R.mipmap.ic_launcher)
+//                .setPriority(PRIORITY_MIN)
+//                .setCategory(Notification.CATEGORY_SERVICE)
+//                .build();
+//        startForeground(101, notification);
+//    }
 
     GetUserMediaImpl(StateProvider stateProvider, Context applicationContext) {
         this.stateProvider = stateProvider;

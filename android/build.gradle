@@ -16,6 +16,9 @@ rootProject.allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'http://download.flutter.io'
+        }
     }
 }
 
@@ -42,5 +45,6 @@ android {
 
 dependencies {
     api 'org.webrtc:google-webrtc:1.0.32006'
+    api "io.flutter:flutter_embedding_debug:1.0.0-f763b5b9b936872bc6c84b4395286ce684e3b431"
     implementation "androidx.annotation:annotation:1.1.0"
 }
