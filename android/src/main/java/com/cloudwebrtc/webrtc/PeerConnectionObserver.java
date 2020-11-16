@@ -658,6 +658,15 @@ class PeerConnectionObserver implements PeerConnection.Observer, EventChannel.St
       String direction = (String)parameters.get("direction");
       List<RtpParameters.Encoding> sendEncodings = new ArrayList<>();
       RtpTransceiver.RtpTransceiverInit init = null;
+
+      if(streamIds == null) {
+          streamIds = new ArrayList<String>();
+      }
+
+      if(direction == null) {
+          direction = "sendrecv";
+      }
+
       if(encodingsParams != null) {
           for (int i=0;i< encodingsParams.size();i++){
               Map<String, Object> params = encodingsParams.get(i);
@@ -856,19 +865,6 @@ class PeerConnectionObserver implements PeerConnection.Observer, EventChannel.St
       candidateParams.putString("sdpMid", candidate.sdpMid);
       candidateParams.putString("candidate", candidate.sdp);
       return candidateParams.toMap();
-  }
-
-  public void createSender(String kind, String streamId, Result result){
-      RtpSender sender = peerConnection.createSender(kind, streamId);
-      result.success(rtpSenderToMap(sender));
-  }
-
-  public void closeSender(String senderId, Result result) {
-      RtpSender sender = getRtpSenderById(senderId);
-      sender.dispose();
-      Map<String, Object> params = new HashMap<>();
-      params.put("result", true);
-      result.success(params);
   }
 
   public void addTrack(MediaStreamTrack track, List<String> streamIds, Result result){

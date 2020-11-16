@@ -599,47 +599,6 @@
                                            message:[NSString stringWithFormat:@"Error: peerConnection not found!"]
                                            details:nil]);
         }
-    } else if ([@"createSender" isEqualToString:call.method]){
-        NSDictionary* argsMap = call.arguments;
-        NSString* peerConnectionId = argsMap[@"peerConnectionId"];
-        NSString* kind = argsMap[@"kind"];
-        NSString* streamId = argsMap[@"streamId"];
-        RTCPeerConnection *peerConnection = self.peerConnections[peerConnectionId];
-        if(peerConnection == nil) {
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%@Failed",call.method]
-            message:[NSString stringWithFormat:@"Error: peerConnection not found!"]
-            details:nil]);
-            return;
-        }
-        RTCRtpSender* sender = [peerConnection senderWithKind:kind streamId:streamId];
-        result([self rtpSenderToMap:sender]);
-    } else if ([@"closeSender" isEqualToString:call.method]){
-        NSDictionary* argsMap = call.arguments;
-        NSString* peerConnectionId = argsMap[@"peerConnectionId"];
-        NSString* senderId = argsMap[@"senderId"];
-        RTCPeerConnection *peerConnection = self.peerConnections[peerConnectionId];
-        if(peerConnection == nil) {
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%@Failed",call.method]
-            message:[NSString stringWithFormat:@"Error: peerConnection not found!"]
-            details:nil]);
-            return;
-        }
-        RTCRtpSender *sender = [self getRtpSenderById:peerConnection Id:senderId];
-        if(sender == nil) {
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%@Failed",call.method]
-            message:[NSString stringWithFormat:@"Error: sender not found!"]
-            details:nil]);
-            return;
-        }
-        
-        if(![peerConnection removeTrack:sender]) {
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%@Failed",call.method]
-            message:[NSString stringWithFormat:@"Error: can't close sender!"]
-            details:nil]);
-            return;
-        }
-        
-        result(nil);
     } else if ([@"addTrack" isEqualToString:call.method]){
         NSDictionary* argsMap = call.arguments;
         NSString* peerConnectionId = argsMap[@"peerConnectionId"];
@@ -1339,9 +1298,15 @@
     NSString* direction = map[@"direction"];
     
     RTCRtpTransceiverInit* init = [RTCRtpTransceiverInit alloc];
-    init.direction = [self stringToTransceiverDirection:direction];
-    init.streamIds = streamIds;
-    
+
+    if(direction != nil) {
+        init.direction = [self stringToTransceiverDirection:direction];
+    }
+
+    if(streamIds != nil) {
+        init.streamIds = streamIds;
+    }
+
     if(encodingsParams != nil) {
         NSArray<RTCRtpEncodingParameters *> *sendEncodings = [[NSArray alloc] init];
         for (NSDictionary* map in encodingsParams){
