@@ -1,6 +1,23 @@
 # Changelog
 
 --------------------------------------------
+[0.5.7] - 2020.11.21
+
+* [Web] Fix events callback for peerconnection.
+
+[0.5.6] - 2020.11.21
+
+* [Android/Darwin/Web] Add onResize event for RTCVideoRenderer.
+
+[0.5.5] - 2020.11.21
+
+* [Android/Darwin] Fix Simulcast issue.
+
+[0.5.4] - 2020.11.21
+
+* [Native/Web] Add videoWidth/videoHeight getter for RTCVideoRenderer.
+* [Web] Add optional parameter track to call getStats.
+
 [0.5.3] - 2020.11.21
 
 * Fix bug.

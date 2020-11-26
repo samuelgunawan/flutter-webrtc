@@ -24,6 +24,12 @@ class RTCVideoRendererNative extends VideoRenderer {
   }
 
   @override
+  int get videoWidth => value.width.toInt();
+
+  @override
+  int get videoHeight => value.height.toInt();
+
+  @override
   int get textureId => _textureId;
 
   @override
@@ -62,12 +68,14 @@ class RTCVideoRendererNative extends VideoRenderer {
       case 'didTextureChangeRotation':
         value =
             value.copyWith(rotation: map['rotation'], renderVideo: renderVideo);
+        onResize?.call();
         break;
       case 'didTextureChangeVideoSize':
         value = value.copyWith(
             width: 0.0 + map['width'],
             height: 0.0 + map['height'],
             renderVideo: renderVideo);
+        onResize?.call();
         break;
       case 'didFirstFrameRendered':
         break;
